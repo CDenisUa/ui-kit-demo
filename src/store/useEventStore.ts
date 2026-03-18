@@ -5,6 +5,7 @@ import type { Event } from '@/types/event';
 import type { ColumnDef } from '@/types/column';
 // Utils
 import { DEFAULT_COLUMNS } from '@/const/columns';
+import { MOCK_EVENTS } from '@/const/events';
 
 interface EventStore {
   events: Event[];
@@ -17,7 +18,7 @@ interface EventStore {
 }
 
 export const useEventStore = create<EventStore>()((set) => ({
-  events: [],
+  events: MOCK_EVENTS,
   columns: DEFAULT_COLUMNS,
 
   addEvent: (event) =>
