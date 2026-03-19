@@ -62,7 +62,6 @@
 | Table | TanStack Table v8 | Headless, full control over UI |
 | Form | React Hook Form + Zod | Performant, schema-driven validation |
 | UI | shadcn/ui + Tailwind CSS v4 | Accessible primitives, no design overhead |
-| Icons | Lucide React | — |
 
 ---
 

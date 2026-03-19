@@ -20,12 +20,6 @@ export function formatDayLabel(dateKey: string): string {
   }).format(new Date(dateKey + 'T00:00:00'));
 }
 
-export function isValidDate(value: string): boolean {
-  if (!value) return false;
-  const date = new Date(value);
-  return !isNaN(date.getTime());
-}
-
 export function sortGroupsByDate(groups: TimelineGroup[]): TimelineGroup[] {
   return [...groups].sort((a, b) => a.dateKey.localeCompare(b.dateKey));
 }

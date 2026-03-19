@@ -1,8 +1,8 @@
 // Core
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { toast } from 'sonner';
 // Types
 import type { Event } from '@/types/event';
 import type { EventFormValues, EventFormProps } from '@/types/eventForm';
@@ -12,13 +12,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { EventFormField } from './EventFormField';
 import { EventFormActions } from './EventFormActions';
-import { EventFormSuccess } from './EventFormSuccess';
 // Hooks
 import { useEventStore } from '@/store/useEventStore';
 
 const schema = z.object({
   title:       z.string().min(1, 'Title is required'),
-  date:        z.string().refine((d) => !isNaN(Date.parse(d)), 'Invalid date'),
+  date:        z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, 'Invalid date'),
   category:    z.enum(['work', 'personal', 'meeting', 'other']),
   status:      z.enum(['upcoming', 'completed', 'cancelled']),
   description: z.string().optional(),
@@ -36,7 +35,6 @@ function buildDefaultValues(event?: Event): EventFormValues {
 
 export function EventForm({ event, onSuccess, onCancel }: EventFormProps) {
   const { addEvent, updateEvent } = useEventStore();
-  const [showSuccess, setShowSuccess] = useState(false);
 
   const { register, handleSubmit, setValue, formState: { errors, isSubmitting } } = useForm<EventFormValues>({
     resolver: zodResolver(schema),
@@ -44,15 +42,19 @@ export function EventForm({ event, onSuccess, onCancel }: EventFormProps) {
   });
 
   const onSubmit = (values: EventFormValues) => {
+    let saved: Event;
+    let message: string;
     if (event) {
       updateEvent(event.id, values);
-      onSuccess({ ...event, ...values });
+      saved = { ...event, ...values };
+      message = 'Event updated';
     } else {
-      const newEvent: Event = { id: crypto.randomUUID(), ...values, description: values.description || undefined };
-      addEvent(newEvent);
-      onSuccess(newEvent);
+      saved = { id: crypto.randomUUID(), ...values, description: values.description || undefined };
+      addEvent(saved);
+      message = 'Event created';
     }
-    setShowSuccess(true);
+    onSuccess(saved);
+    setTimeout(() => toast.success(message), 0);
   };
 
   return (
@@ -92,7 +94,6 @@ export function EventForm({ event, onSuccess, onCancel }: EventFormProps) {
         <Textarea id="description" {...register('description')} placeholder="Optional description" rows={3} />
       </EventFormField>
 
-      <EventFormSuccess visible={showSuccess} />
       <EventFormActions isSubmitting={isSubmitting} onCancel={onCancel} />
     </form>
   );

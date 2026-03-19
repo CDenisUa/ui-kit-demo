@@ -17,7 +17,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
           <h1 className="text-2xl font-bold tracking-tight">Event Manager</h1>
           <div className="flex items-center gap-3">
             <div className="flex rounded-md border overflow-hidden">
@@ -37,7 +37,9 @@ export default function App() {
             <Button onClick={openAdd}>New Event</Button>
           </div>
         </div>
-        {view === 'grid' ? <DataGrid /> : <Timeline />}
+        <div key={view} className="animate-in fade-in duration-200">
+          {view === 'grid' ? <DataGrid /> : <Timeline />}
+        </div>
       </div>
       <EventFormModal />
     </div>
