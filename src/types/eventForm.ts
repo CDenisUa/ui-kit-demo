@@ -8,7 +8,7 @@ export interface EventFormValues {
   date: string;
   category: EventCategory;
   status: EventStatus;
-  description: string;
+  description?: string;
 }
 
 export interface EventFormProps {
